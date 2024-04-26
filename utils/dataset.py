@@ -17,6 +17,7 @@ class make_datapath_list():
     img_file_path, anno_file_path = zip(*combined)
 
     # Split into folds
+    self.nfold = nfold
     self.folds = []
     fold_size = len(img_file_path) // self.nfold
     for i in range(nfold):
@@ -75,24 +76,24 @@ class CrackDataset(Dataset):
       
 
 class CrackTransform():
-    def __init__(self, crop_size):
-        self.crop_size = crop_size
+  def __init__(self, crop_size):
+      self.crop_size = crop_size
 
-    def __call__(self, image, mask):
-        image = transforms.Resize((self.crop_size, self.crop_size))(image)
-        mask = transforms.Resize((self.crop_size, self.crop_size))(mask)
+  def __call__(self, image, label):
+    image = transforms.Resize((self.crop_size, self.crop_size))(image)
+    label = transforms.Resize((self.crop_size, self.crop_size))(label)
 
-        if random.random() > 0.5:
-            image = transforms.functional.hflip(image)
-            mask = transforms.functional.hflip(mask)
+    if random.random() > 0.5:
+      image = transforms.functional.hflip(image)
+      label = transforms.functional.hflip(label)
 
-        if random.random() > 0.5:
-            image = transforms.functional.vflip(image)
-            mask = transforms.functional.vflip(mask)
+    if random.random() > 0.5:
+      image = transforms.functional.vflip(image)
+      label = transforms.functional.vflip(label)
 
-        image = transforms.ToTensor()(image)
-        mask = transforms.ToTensor()(mask)
-        mask = torch.where(mask > 0.5, torch.tensor(1), torch.tensor(0)) 
+    image = transforms.ToTensor()(image)
+    label = transforms.ToTensor()(label)
+    label = torch.where(label > 0.5, torch.tensor(1), torch.tensor(0)) 
 
-        return image, mask
-    
+    return image, label
+  
