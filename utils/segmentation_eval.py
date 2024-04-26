@@ -50,7 +50,7 @@ class Precision(nn.Module):
         fp = torch.sum((inputs == 1) & (targets == 0)).float()
 
         # precisionを計算する
-        precision = tp / (tp + fp)
+        precision = tp / (tp + fp + 1e-5)
         return precision
 
 #再現率
@@ -68,7 +68,7 @@ class Recall(nn.Module):
         tp = torch.sum((inputs == 1) & (targets == 1)).float()
         fn = torch.sum((inputs == 0) & (targets == 1)).float()
 
-        recall = tp / (tp + fn)
+        recall = tp / (tp + fn + 1e-5)
         return recall
 
 #特異度

@@ -93,7 +93,7 @@ class CrackTransform():
 
     image = transforms.ToTensor()(image)
     label = transforms.ToTensor()(label)
-    label = torch.where(label > 0.5, torch.tensor(1), torch.tensor(0)) 
+    label = torch.where(label > 0.5, torch.tensor(1), torch.tensor(0)).to(torch.float32)
 
     return image, label
   
